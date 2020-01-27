@@ -1,48 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { Bar } from 'ant-design-pro/lib/Charts';
+import { Bar, Line, Pie } from 'react-chartjs-2';
+import { getDailyEvents } from '../actions';
 
 import { connect } from 'react-redux';
 
 function Charts(props) {
-  const dailyEventsData = () => {
-    let salesData = [];
-    for (let item in props.dailyEvents) {
-      salesData.push({
-        x: props.dailyEvents[item].date.substring(
-          0,
-          props.dailyEvents[item].date.indexOf('T')
-        ),
-        y: parseInt(props.dailyEvents[item].events)
-      });
-    }
-    return salesData;
-  };
-  //   const [h_e, set_h_e] = useState('events');
-  //   const hourlyEventsData = h_e => {
-  //     let salesData = [];
-  //     let count = 0;
+	const [poi_id, set_poi_id] = useState(1);
 
-  //     for (let item in props.hourlyEvents) {
+	useEffect(() => {
+		props.getDailyEvents(poi_id);
+	}, [poi_id]);
+	let x = [];
+	let y = [];
+	let name = Object.keys;
 
-  //     }
+	for (let item in props.dailyEvents) {
+		let event = props.dailyEvents[item];
+		x.push(event.date.substring(0, event.date.indexOf('T')));
+		y.push(parseInt(event.events));
+	}
 
-  //     return salesData;
-  //   };
-  //   console.log(dailyEventsData(), props.dailyEvents, props);
+	let data = {
+		labels: x,
+		datasets: [
+			{
+				label: 'Events',
+				data: y,
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.6)',
+					'rgba(54, 162, 235, 0.6)',
+					'rgba(255, 206, 86, 0.6)',
+					'rgba(75, 192, 192, 0.6)',
+					'rgba(153, 102, 255, 0.6)',
+					'rgba(255, 159, 64, 0.6)',
+					'rgba(255, 99, 132, 0.6)'
+				]
+			}
+		]
+	};
 
-  return (
-    <div>
-      <Bar height={200} title={props.name} data={dailyEventsData()} />
+	return (
+		<div
+			onClick={() => {
+				if (poi_id === 4) {
+					set_poi_id(1);
+				} else {
+					set_poi_id(poi_id + 1);
+				}
 
-      {/* <Bar height={200} title={props.name} data={hourlyEventsData()} />
-      <Bar height={200} title={props.name} data={props.logic(props.data)} />
-      <Bar height={200} title={props.name} data={props.logic(props.data)} /> */}
-    </div>
-  );
+				console.log(poi_id);
+			}}>
+			<Bar data={data} width={100} height={200} options={{ maintainAspectRatio: false }} />
+		</div>
+	);
 }
 
 const mapStateToProps = state => {
-  return { dailyEvents: state.dailyEvents };
+	return { dailyEvents: state.dailyEvents };
 };
 
-export default connect(mapStateToProps, null)(Charts);
+export default connect(mapStateToProps, { getDailyEvents })(Charts);

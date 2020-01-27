@@ -4,41 +4,36 @@ import DailyEventsChart from './DailyEventsChart';
 import DailyStatsChart from './DailyStats';
 import { connect } from 'react-redux';
 
-import {
-  getHourlyEvents,
-  getDailyEvents,
-  getDailyStats,
-  getHourlyStats
-} from '../actions/';
+import { getHourlyEvents, getDailyEvents, getDailyStats, getHourlyStats } from '../actions/';
 
 function App(props) {
-  useEffect(() => {
-    props.getDailyEvents();
-    props.getDailyStats();
-    props.getHourlyEvents();
-    props.getHourlyStats();
-  }, []);
+	useEffect(() => {
+		//props.getDailyEvents(1);
+		// props.getDailyStats();
+		// props.getHourlyEvents();
+		// props.getHourlyStats();
+	}, []);
 
-  return (
-    <div className="App">
-      <DailyEventsChart />
-      <DailyStatsChart />
-    </div>
-  );
+	return (
+		<div className="App">
+			<DailyEventsChart />
+			<DailyStatsChart />
+		</div>
+	);
 }
 
 const mapStateToProps = state => {
-  return {
-    daily_events: state.dailyEvents,
-    daily_stats: state.dailyStats,
-    hourly_stats: state.hourlyStats,
-    hourly_events: state.hourlyEvents
-  };
+	return {
+		daily_events: state.dailyEvents,
+		daily_stats: state.dailyStats,
+		hourly_stats: state.hourlyStats,
+		hourly_events: state.hourlyEvents
+	};
 };
 
 export default connect(mapStateToProps, {
-  getHourlyEvents,
-  getDailyEvents,
-  getDailyStats,
-  getHourlyStats
+	getHourlyEvents,
+	getDailyEvents,
+	getDailyStats,
+	getHourlyStats
 })(App);
