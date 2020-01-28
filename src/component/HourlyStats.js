@@ -1,120 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import { getHourlyStats } from '../actions';
+import { getHourlyStats, getPoi } from '../actions';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+import './HourlyStats.css';
 
 function HourlyStats(props) {
-  const [poi_id, set_poi_id] = useState(1);
+	const [category, setCategory] = useState('revenue');
 
-  useEffect(() => {
-    props.getHourlyStats(poi_id);
-  }, []);
-  let obj = {};
+	useEffect(() => {
+		props.getHourlyStats();
+		props.getPoi();
+	}, []);
 
-  for (let item in props.hourlyStats) {
-    let event = props.hourlyStats[item];
-    if (!obj[event.poi_id]) {
-      obj = { ...obj, [event.poi_id]: [event] };
+	var obj = {};
 
-      console.log('initial add', obj);
-    } else {
-      obj[event.poi_id].push(event);
+	for (let item in props.hourlyStats) {
+		let event = props.hourlyStats[item];
+		if (!obj[event.poi_id]) {
+			obj = { ...obj, [event.poi_id]: [event] };
 
-      //console.log(event.poi_id, event, dataSets);
-    }
-  }
+			console.log('initial add', obj);
+		} else {
+			obj[event.poi_id].push(event);
 
-  // var data = {
-  //   ,
-  //   datasets: [
-  //     {
-  //       label: 'Prime and Fibonacci',
-  //       fillColor: 'rgba(220,220,220,0.2)',
-  //       strokeColor: 'rgba(220,220,220,1)',
-  //       pointColor: 'rgba(220,220,220,1)',
-  //       pointStrokeColor: '#fff',
-  //       pointHighlightFill: '#fff',
-  //       pointHighlightStroke: 'rgba(220,220,220,1)',
-  //       data: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-  //     },
-  //     {
-  //       label: 'My Second dataset',
-  //       fillColor: 'rgba(151,187,205,0.2)',
-  //       strokeColor: 'rgba(151,187,205,1)',
-  //       pointColor: 'rgba(151,187,205,1)',
-  //       pointStrokeColor: '#fff',
-  //       pointHighlightFill: '#fff',
-  //       pointHighlightStroke: 'rgba(151,187,205,1)',
-  //       data: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
-  //     }
-  //   ]
-  // };
+			//console.log(event.poi_id, event, dataSets);
+		}
+	}
+	console.log(obj);
 
-  var data = {
-    labels: [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23
-    ],
-    datasets: [
-      {
-        label: 'Prime and Fibonacci',
-        fillColor: 'rgba(220,220,220,0.2)',
-        strokeColor: 'rgba(220,220,220,1)',
-        pointColor: 'rgba(220,220,220,1)',
-        pointStrokeColor: '#fff',
-        pointHighlightFill: '#fff',
-        pointHighlightStroke: 'rgba(220,220,220,1)',
-        data: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-      },
-      {
-        label: 'My Second dataset',
-        fillColor: 'rgba(151,187,205,0.2)',
-        strokeColor: 'rgba(151,187,205,1)',
-        pointColor: 'rgba(151,187,205,1)',
-        pointStrokeColor: '#fff',
-        pointHighlightFill: '#fff',
-        pointHighlightStroke: 'rgba(151,187,205,1)',
-        data: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
-      }
-    ]
-  };
+	var dataSets = [];
 
-  return (
-    <div>
-      <Line
-        data={data}
-        width={100}
-        height={200}
-        options={{ maintainAspectRatio: false }}></Line>
-    </div>
-  );
+	for (let data in obj) {
+		dataSets.push({
+			label: obj[data][0].name,
+			fillColor: 'rgba(220,220,220,0.2)',
+			strokeColor: 'rgba(220,220,220,1)',
+			pointColor: 'rgba(220,220,220,1)',
+			pointStrokeColor: '#fff',
+			pointHighlightFill: '#fff',
+			pointHighlightStroke: 'rgba(220,220,220,1)',
+			data: _.map(obj[data], category)
+		});
+	}
+
+	var data = {
+		labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+		datasets: dataSets
+	};
+	let count = 0;
+	return (
+		<div
+			onClick={() => {
+				switch (category) {
+					case 'revenue':
+						setCategory('clicks');
+						break;
+					case 'clicks':
+						setCategory('impressions');
+						break;
+					case 'impressions':
+						setCategory('revenue');
+						break;
+					default:
+						setCategory('revenue');
+						break;
+				}
+			}}>
+			)<h2 className="title">{category} per hour</h2>
+			<div>
+				<Line data={data} width={100} height={200} options={{ maintainAspectRatio: false }}></Line>
+			</div>
+		</div>
+	);
 }
 
 const mapStateToProps = state => {
-  return {
-    hourlyStats: state.hourlyStats
-  };
+	return {
+		hourlyStats: state.hourlyStats,
+		poi: state.poi
+	};
 };
 
-export default connect(mapStateToProps, { getHourlyStats })(HourlyStats);
+export default connect(mapStateToProps, { getHourlyStats, getPoi })(HourlyStats);
