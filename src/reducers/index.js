@@ -3,15 +3,18 @@ import marketingStats from './marketingDataReducer';
 import {
   getHourlyEventsReducer,
   getDailyEventsReducer,
-  getHourlyStatsReducer,
+  getAvgHourlyStatsReducer,
+  getSumHourlyStatsReducer,
   getDailyStatsReducer,
   getPoiReducer
 } from './marketingDataReducer';
 
 export default combineReducers({
-  hourlyStats: getHourlyStatsReducer,
+  avgHourlyStats: getAvgHourlyStatsReducer,
+  sumHourlyStats: getSumHourlyStatsReducer,
   hourlyEvents: getHourlyEventsReducer,
   dailyEvents: getDailyEventsReducer,
   dailyStats: getDailyStatsReducer,
+
   poi: getPoiReducer
 });

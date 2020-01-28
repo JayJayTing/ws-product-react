@@ -1,4 +1,4 @@
-.title {
-	display: flex;
-	justify-content: center;
+.button-styling {
+  display: flex;
+  justify-content: space-evenly;
 }

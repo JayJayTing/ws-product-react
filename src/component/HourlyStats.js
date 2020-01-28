@@ -1,79 +1,123 @@
 import React, { useState, useEffect } from 'react';
-import { getHourlyStats, getPoi } from '../actions';
+import { getAvgHourlyStats, getPoi, getSumHourlyStats } from '../actions';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
+import { Button } from 'antd';
 import _ from 'lodash';
 import './HourlyStats.css';
 
 function HourlyStats(props) {
-	const [category, setCategory] = useState('revenue');
-	const cycle = () => {
-		switch (category) {
-			case 'revenue':
-				setCategory('clicks');
-				break;
-			case 'clicks':
-				setCategory('impressions');
-				break;
-			case 'impressions':
-				setCategory('revenue');
-				break;
-			default:
-				setCategory('revenue');
-				break;
-		}
-	};
-	useEffect(() => {
-		props.getHourlyStats();
-		props.getPoi();
-	}, []);
+  const [count, setCount] = useState(1);
+  useEffect(() => {
+    props.getAvgHourlyStats(4, '2017-01-20', '2017-06-20');
+    props.getAvgHourlyStats(1, '2017-04-20', '2017-06-20');
+    props.getAvgHourlyStats(2, '2017-04-20', '2017-06-20');
+    props.getAvgHourlyStats(3, '2017-04-20', '2017-06-20');
+  }, []);
+  const [minDate, setMinDate] = useState('');
+  const [maxDate, setMaxDate] = useState('');
 
-	var obj = {};
-	var dataSets = [];
-	var data = {
-		labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-		datasets: dataSets
-	};
+  const [data, setData] = useState({
+    labels: [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    datasets: []
+  });
 
-	for (let item in props.hourlyStats) {
-		let event = props.hourlyStats[item];
-		if (!obj[event.poi_id]) {
-			obj = { ...obj, [event.poi_id]: [event] };
+  const addDataSet = companyId => {
+    let rev = [];
+    let clicks = [];
+    let imps = [];
+    let label = '';
 
-			console.log('initial add', obj);
-		} else {
-			obj[event.poi_id].push(event);
-		}
-	}
+    for (let index in companyId) {
+      let stats = companyId[index];
+      rev.push(stats.revenue);
+      clicks.push(stats.clicks);
+      imps.push(stats.impressions);
+      label = stats.name;
+      console.log(' name is' + stats.name);
+    }
 
-	for (let data in obj) {
-		dataSets.push({
-			label: obj[data][0].name,
-			fillColor: 'rgba(220,220,220,0.2)',
-			strokeColor: 'rgba(220,220,220,1)',
-			pointColor: 'rgba(220,220,220,1)',
-			pointStrokeColor: '#fff',
-			pointHighlightFill: '#fff',
-			pointHighlightStroke: 'rgba(220,220,220,1)',
-			data: _.map(obj[data], category)
-		});
-	}
+    setData({
+      ...data,
+      datasets: [
+        ...data.datasets,
+        {
+          data: clicks,
+          clicks,
+          rev,
+          imps,
+          label,
+          fill: false,
+          borderColor: '#c45850'
+        }
+      ]
+    });
+  };
 
-	return (
-		<div onClick={cycle}>
-			)<h2 className="title">{category} per hour</h2>
-			<div>
-				<Line data={data} width={100} height={200} options={{ maintainAspectRatio: false }}></Line>
-			</div>
-		</div>
-	);
+  console.log('LOOK HERE AVG HOURLY STATS', data);
+  return (
+    <div>
+      <Line data={data}></Line>
+      <form onSubmit={() => {}}>
+        <input
+          value={minDate}
+          onChange={e => {
+            setMinDate(e.target.value);
+          }}></input>
+        <input
+          value={maxDate}
+          onChange={e => {
+            setMaxDate(e.target.value);
+          }}></input>
+        <Button
+          onClick={() => {
+            addDataSet(props.avgHourlyStats[count]);
+            setCount(count + 1);
+            //addDataSet(props.avgHourlyStats[4]);
+          }}>
+          Test
+        </Button>
+      </form>
+      {/* <div className="button-styling">{selectPoi(props.poi)}</div> */}
+    </div>
+  );
 }
 
 const mapStateToProps = state => {
-	return {
-		hourlyStats: state.hourlyStats,
-		poi: state.poi
-	};
+  return {
+    avgHourlyStats: state.avgHourlyStats,
+    sumHourlyStats: state.sumHourlyStats,
+    poi: state.poi
+  };
 };
 
-export default connect(mapStateToProps, { getHourlyStats, getPoi })(HourlyStats);
+export default connect(mapStateToProps, {
+  getAvgHourlyStats,
+  getPoi,
+  getSumHourlyStats
+})(HourlyStats);

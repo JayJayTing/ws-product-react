@@ -4,20 +4,11 @@ import DailyEventsChart from './DailyEventsChart';
 import DailyStatsChart from './DailyStats';
 import HourlyStats from './HourlyStats';
 import { connect } from 'react-redux';
-
-import {
-  getHourlyEvents,
-  getDailyEvents,
-  getDailyStats,
-  getHourlyStats
-} from '../actions/';
+import { getPoi } from '../actions';
 
 function App(props) {
   useEffect(() => {
-    //props.getDailyEvents(1);
-    // props.getDailyStats();
-    // props.getHourlyEvents();
-    // props.getHourlyStats();
+    props.getPoi();
   }, []);
 
   return (
@@ -29,18 +20,4 @@ function App(props) {
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    daily_events: state.dailyEvents,
-    daily_stats: state.dailyStats,
-    hourly_stats: state.hourlyStats,
-    hourly_events: state.hourlyEvents
-  };
-};
-
-export default connect(mapStateToProps, {
-  getHourlyEvents,
-  getDailyEvents,
-  getDailyStats,
-  getHourlyStats
-})(App);
+export default connect(null, { getPoi })(App);
