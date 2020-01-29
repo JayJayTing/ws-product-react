@@ -1,4 +1,9 @@
-.button-styling {
-  display: flex;
-  justify-content: space-evenly;
+.button-layout {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.input-layout {
+	display: flex;
+	justify-content: space-evenly;
 }

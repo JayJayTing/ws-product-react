@@ -1,123 +1,151 @@
 import React, { useState, useEffect } from 'react';
-import { getAvgHourlyStats, getPoi, getSumHourlyStats } from '../actions';
+import { getAvgHourlyStats, getSumHourlyStats, getPoi } from '../actions';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
-import { Button } from 'antd';
+import { Button, Input } from 'antd';
+import colorArray from './colorArray';
 import _ from 'lodash';
 import './HourlyStats.css';
+import create from 'antd/lib/icon/IconFont';
 
 function HourlyStats(props) {
-  const [count, setCount] = useState(1);
-  useEffect(() => {
-    props.getAvgHourlyStats(4, '2017-01-20', '2017-06-20');
-    props.getAvgHourlyStats(1, '2017-04-20', '2017-06-20');
-    props.getAvgHourlyStats(2, '2017-04-20', '2017-06-20');
-    props.getAvgHourlyStats(3, '2017-04-20', '2017-06-20');
-  }, []);
-  const [minDate, setMinDate] = useState('');
-  const [maxDate, setMaxDate] = useState('');
+	const [minDate, setMinDate] = useState('2012-12-12');
+	const [maxDate, setMaxDate] = useState('2020-12-12');
+	const [datasets, setDataSets] = useState([]);
+	const [query, setQuery] = useState('average');
 
-  const [data, setData] = useState({
-    labels: [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23
-    ],
-    datasets: []
-  });
+	let data = { labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], datasets };
 
-  const addDataSet = companyId => {
-    let rev = [];
-    let clicks = [];
-    let imps = [];
-    let label = '';
+	const retrieveData = (minDate, maxDate, query) => {
+		for (let key in props.poi) {
+			props.getAvgHourlyStats(props.poi[key].poi_id, minDate, maxDate);
+			props.getSumHourlyStats(props.poi[key].poi_id, minDate, maxDate);
+		}
+	};
 
-    for (let index in companyId) {
-      let stats = companyId[index];
-      rev.push(stats.revenue);
-      clicks.push(stats.clicks);
-      imps.push(stats.impressions);
-      label = stats.name;
-      console.log(' name is' + stats.name);
-    }
+	const datasetSetup = (companyId, yAxis) => {
+		let rev = [];
+		let clicks = [];
+		let imps = [];
+		let label = '';
+		let id;
 
-    setData({
-      ...data,
-      datasets: [
-        ...data.datasets,
-        {
-          data: clicks,
-          clicks,
-          rev,
-          imps,
-          label,
-          fill: false,
-          borderColor: '#c45850'
-        }
-      ]
-    });
-  };
+		for (let index in companyId) {
+			let stats = companyId[index];
+			rev.push(stats.revenue);
+			clicks.push(stats.clicks);
+			imps.push(stats.impressions);
+			label = stats.name;
+			id = stats.id;
+		}
 
-  console.log('LOOK HERE AVG HOURLY STATS', data);
-  return (
-    <div>
-      <Line data={data}></Line>
-      <form onSubmit={() => {}}>
-        <input
-          value={minDate}
-          onChange={e => {
-            setMinDate(e.target.value);
-          }}></input>
-        <input
-          value={maxDate}
-          onChange={e => {
-            setMaxDate(e.target.value);
-          }}></input>
-        <Button
-          onClick={() => {
-            addDataSet(props.avgHourlyStats[count]);
-            setCount(count + 1);
-            //addDataSet(props.avgHourlyStats[4]);
-          }}>
-          Test
-        </Button>
-      </form>
-      {/* <div className="button-styling">{selectPoi(props.poi)}</div> */}
-    </div>
-  );
+		return {
+			data: yAxis == 'clicks' ? clicks : yAxis == 'rev' ? rev : yAxis == 'imps' ? imps : imps,
+			clicks,
+			rev,
+			imps,
+			label,
+			key: id,
+			fill: false,
+			borderColor: colorArray[Math.floor(Math.random() * 50)],
+			id
+		};
+	};
+
+	const createDataset = (category, query) => {
+		let newDataset = [];
+		if (query == 'average') {
+			for (let key in props.avgHourlyStats) {
+				newDataset.push(datasetSetup(props.avgHourlyStats[key], category));
+			}
+		}
+
+		if (query == 'sum') {
+			for (let key in props.avgHourlyStats) {
+				newDataset.push(datasetSetup(props.sumHourlyStats[key], category));
+			}
+		}
+
+		return newDataset;
+	};
+
+	return (
+		<div>
+			<Line data={data}></Line>
+			<div className='input-layout'>
+				<Input
+					value={minDate}
+					onChange={e => {
+						setMinDate(e.target.value);
+					}}></Input>
+				<Input
+					value={maxDate}
+					onChange={e => {
+						setMaxDate(e.target.value);
+					}}></Input>
+			</div>
+			<div className='button-layout'>
+				<Button
+					type='primary'
+					onClick={() => {
+						retrieveData(minDate, maxDate);
+						setQuery('average');
+					}}>
+					Get Average Stats For Specified Date
+				</Button>
+				<Button
+					type='primary'
+					onClick={() => {
+						retrieveData(minDate, maxDate);
+						setQuery('sum');
+					}}>
+					Get Sum of Stats For Specified Date
+				</Button>
+			</div>
+			<br />
+			<div className='button-layout'>
+				<Button
+					type='primary'
+					onClick={() => {
+						let newDataset = createDataset('clicks', query);
+
+						setDataSets(newDataset);
+					}}>
+					Order Dataset by Clicks
+				</Button>
+				<Button
+					type='primary'
+					onClick={() => {
+						let newDataset = createDataset('rev', query);
+
+						setDataSets(newDataset);
+					}}>
+					Order Dataset by Revenue
+				</Button>
+				<Button
+					type='primary'
+					onClick={() => {
+						let newDataset = createDataset('imps', query);
+
+						setDataSets(newDataset);
+					}}>
+					Order Dataset by Impressions
+				</Button>
+			</div>
+		</div>
+	);
 }
 
 const mapStateToProps = state => {
-  return {
-    avgHourlyStats: state.avgHourlyStats,
-    sumHourlyStats: state.sumHourlyStats,
-    poi: state.poi
-  };
+	return {
+		avgHourlyStats: state.avgHourlyStats,
+		sumHourlyStats: state.sumHourlyStats,
+		poi: state.poi
+	};
 };
 
 export default connect(mapStateToProps, {
-  getAvgHourlyStats,
-  getPoi,
-  getSumHourlyStats
+	getAvgHourlyStats,
+	getSumHourlyStats,
+	getPoi
 })(HourlyStats);
