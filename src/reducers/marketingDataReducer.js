@@ -3,7 +3,7 @@ import { GET_HOURLY_EVENTS, GET_HOURLY_STATS, GET_DAILY_EVENTS, GET_AVG_HOURLY_S
 export const getHourlyEventsReducer = (state = {}, action) => {
 	switch (action.type) {
 		case GET_HOURLY_EVENTS:
-			return action.payload;
+			return Object.assign({}, action.payload);
 		default:
 			return state;
 	}
@@ -12,7 +12,7 @@ export const getHourlyEventsReducer = (state = {}, action) => {
 export const getDailyEventsReducer = (state = {}, action) => {
 	switch (action.type) {
 		case GET_DAILY_EVENTS:
-			return action.payload;
+			return Object.assign({}, action.payload);
 		default:
 			return state;
 	}
@@ -25,7 +25,7 @@ export const getAvgHourlyStatsReducer = (state = {}, action) => {
 			} else {
 				state[action.id] = action.payload;
 			}
-			return state;
+			return Object.assign({}, state);
 		default:
 			return state;
 	}
@@ -40,44 +40,44 @@ export const getSumHourlyStatsReducer = (state = {}, action) => {
 			} else {
 				obj[action.id] = action.payload;
 			}
-			return obj;
+			return Object.assign({}, obj);
 		default:
-			return state;
+			return Object.assign({}, state);
 	}
 };
 
 export const getDailyStatsReducer = (state = {}, action) => {
 	switch (action.type) {
 		case GET_DAILY_STATS:
-			return action.payload;
+			return Object.assign({}, action.payload);
 		default:
-			return state;
+			return Object.assign({}, state);
 	}
 };
 
 export const getPoiReducer = (state = {}, action) => {
 	switch (action.type) {
 		case GET_POI:
-			return action.payload;
+			return Object.assign({}, action.payload);
 		default:
-			return state;
+			return Object.assign({}, state);
 	}
 };
 
 export const getHourlyStats = (state = {}, action) => {
 	switch (action.type) {
 		case GET_HOURLY_STATS:
-			return action.payload;
+			return Object.assign({}, action.payload);
 		default:
-			return state;
+			return Object.assign({}, state);
 	}
 };
 
 export const getHourlyEvents = (state = {}, action) => {
 	switch (action.type) {
 		case GET_HOURLY_EVENTS:
-			return action.payload;
+			return Object.assign({}, action.payload);
 		default:
-			return state;
+			return Object.assign({}, state);
 	}
 };

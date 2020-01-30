@@ -3,6 +3,7 @@ import axios from 'axios';
 import DailyEventsChart from './DailyEventsChart';
 import DailyStatsChart from './DailyStats';
 import DataTable from './DataTable';
+import { getHourlyEvents, getHourlyStats } from '../actions/';
 
 import HourlyStats from './HourlyStats';
 import { connect } from 'react-redux';
@@ -23,4 +24,4 @@ function App(props) {
 	);
 }
 
-export default connect(null, { getPoi })(App);
+export default connect(null, { getPoi, getHourlyEvents, getHourlyStats })(App);

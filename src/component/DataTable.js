@@ -1,52 +1,124 @@
 import React, { useEffect, useState } from 'react';
 import { getHourlyEvents, getHourlyStats } from '../actions';
 import { connect } from 'react-redux';
-import { Table } from 'antd';
+import { Table, Button, Input, Switch } from 'antd';
+import Fuse from 'fuse.js';
+
+const fuzzySearch = (object, rules, fuzzySeqence) => {
+	let fuse = new Fuse(object, rules);
+	let analyzed = fuse.search(fuzzySeqence);
+
+	return analyzed;
+};
+
 function DataTable(props) {
 	useEffect(() => {
 		props.getHourlyEvents();
 		props.getHourlyStats();
 	}, []);
+	const [arrangement, setArrangement] = useState(true);
 
-	const columns = [
+	const [query, setQuery] = useState('');
+
+	const statsColumns = [
 		{
-			title: '',
+			title: 'Name',
 			dataIndex: 'name',
-			width: 150
+			width: 150,
+			sorter: (a, b) => a.name.length - b.name.length,
+			sortDirections: ['ascend', 'descend']
 		},
 		{
-			title: 'Age',
-			dataIndex: 'age',
-			width: 150
+			title: 'Date',
+			dataIndex: 'date',
+			width: 150,
+			sorter: (a, b) => a.date - b.date,
+			sortDirections: ['ascend', 'descend']
 		},
 		{
-			title: 'Address',
-			dataIndex: 'address'
+			title: 'Hour',
+			dataIndex: 'hour',
+			sorter: (a, b) => a.hour - b.hour,
+			sortDirections: ['ascend', 'descend']
 		},
 		{
-			title: 'Age',
-			dataIndex: 'age',
-			width: 150
+			title: 'Impressions',
+			dataIndex: 'impressions',
+			width: 150,
+			sorter: (a, b) => a.impressions - b.impressions,
+			sortDirections: ['ascend', 'descend']
 		},
 		{
-			title: 'Address',
-			dataIndex: 'address'
+			title: 'Clicks',
+			dataIndex: 'clicks',
+			sorter: (a, b) => a.clicks - b.clicks,
+			sortDirections: ['ascend', 'descend']
+		},
+		{
+			title: 'Revenue',
+			dataIndex: 'revenue',
+			sorter: (a, b) => a.revenue - b.revenue,
+			sortDirections: ['ascend', 'descend']
 		}
 	];
 
-	const data = [];
-	for (let i = 0; i < 100; i++) {
-		data.push({
-			key: i,
-			name: `Edward King ${i}`,
-			age: 32,
-			address: `London, Park Lane no. ${i}`
-		});
-	}
+	const eventColumns = [
+		{
+			title: 'Name',
+			dataIndex: 'name',
+			width: 150,
+			sorter: (a, b) => a.name.length - b.name.length,
+			sortDirections: ['ascend', 'descend']
+		},
+		{
+			title: 'Date',
+			dataIndex: 'date',
+			width: 150,
+			sorter: (a, b) => a.date - b.date,
+			sortDirections: ['ascend', 'descend']
+		},
+		{
+			title: 'Hour',
+			dataIndex: 'hour',
+			sorter: (a, b) => a.hour - b.hour,
+			sortDirections: ['ascend', 'descend']
+		},
+		{
+			title: 'Events',
+			dataIndex: 'events',
+			width: 150,
+			sorter: (a, b) => a.events - b.events,
+			sortDirections: ['ascend', 'descend']
+		}
+	];
+
+	var options = {
+		keys: ['name']
+	};
 
 	return (
 		<div>
-			<Table columns={columns} dataSource={data} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
+			<div>
+				Search for Company
+				<Input
+					value={query}
+					onChange={e => {
+						setQuery(e.target.value);
+					}}
+				/>
+				<Switch
+					type='primary'
+					onChange={() => {
+						setArrangement(!arrangement);
+					}}>
+					{arrangement ? 'Show Events Table' : 'Show Stats Table'}
+				</Switch>
+			</div>
+			<div>{arrangement ? 'Events Table' : 'Stats Table'}</div>
+			<div>
+				<Table columns={arrangement ? eventColumns : statsColumns} dataSource={arrangement ? fuzzySearch(Object.values(props.hourlyEvents), options, query) : fuzzySearch(Object.values(props.hourlyStats), options, query)} pagination={{ pageSize: 50 }} scroll={{ y: 500 }} />
+			</div>
+			>
 		</div>
 	);
 }

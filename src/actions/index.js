@@ -46,6 +46,6 @@ export const getHourlyStats = () => async dispatch => {
 };
 
 export const getHourlyEvents = () => async dispatch => {
-	let response = await axios.get('http://localhost:5555/stats/hourly');
+	let response = await axios.get('http://localhost:5555/events/hourly');
 	dispatch({ type: GET_HOURLY_EVENTS, payload: response.data });
 };
