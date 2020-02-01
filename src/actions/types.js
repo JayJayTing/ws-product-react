@@ -5,3 +5,5 @@ export const GET_HOURLY_STATS = 'GET_HOURLY_STATS';
 export const GET_HOURLY_EVENTS = 'GET_HOURLY_EVENTS';
 export const GET_DAILY_STATS = 'GET_DAILY_STATS';
 export const GET_POI = 'GET_POI';
+export const GET_EVENTS_SUM_GEO = 'GET_EVENTS_SUM_GEO';
+export const GET_STATS_SUM_GEO = 'GET_STATS_SUM_GEO';

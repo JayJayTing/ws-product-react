@@ -10,9 +10,10 @@ function DailyStats(props) {
 	const [poi_id, set_poi_id] = useState(1);
 	const [x_axes, set_x_axes] = useState('revenue');
 	const [y_axes, set_y_axes] = useState('date');
+	const [cycle, setCycle] = useState(1);
 
 	useEffect(() => {
-		props.getDailyStats(poi_id);
+		props.getDailyStats(poi_id, cycle);
 	}, [poi_id, x_axes]);
 
 	let x = [];
@@ -46,34 +47,60 @@ function DailyStats(props) {
 	};
 
 	return (
-		<div className="layout">
-			<div className="wrapper">
+		<div className='layout'>
+			<h3>Daily Stats Bar Chart Sorted by Custom Dates</h3>
+			<div className='wrapper'>
 				<Bar data={data} width={500} height={200} options={{ maintainAspectRatio: false }} />
 			</div>
 
-			<div className="buttonPosition">
+			<div className='buttonPosition'>
 				<Button
-					type="primary"
+					type='primary'
 					onClick={() => {
 						set_x_axes('revenue');
 					}}>
-					By Revenue
+					Graph By Revenue
 				</Button>
 				<Button
-					type="primary"
+					type='primary'
 					onClick={() => {
 						set_x_axes('clicks');
 					}}>
-					By Clicks
+					Graph By Clicks
 				</Button>
 				<Button
-					type="primary"
+					type='primary'
 					onClick={() => {
 						set_x_axes('impressions');
 					}}>
-					By Impressions
+					Graph By Impressions
 				</Button>
 			</div>
+
+			<Button
+				onClick={() => {
+					props.getDailyStats(poi_id, cycle);
+					setCycle(cycle - 1);
+				}}>
+				Go to Prev Week
+			</Button>
+			<Button
+				onClick={() => {
+					props.getDailyStats(poi_id, cycle);
+					setCycle(cycle + 1);
+				}}>
+				Go to Next Week
+			</Button>
+			<Button
+				onClick={() => {
+					if (poi_id === 4) {
+						set_poi_id(1);
+					} else {
+						set_poi_id(poi_id + 1);
+					}
+				}}>
+				Switch Locations
+			</Button>
 		</div>
 	);
 }

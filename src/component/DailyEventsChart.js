@@ -6,9 +6,10 @@ import { connect } from 'react-redux';
 
 function Charts(props) {
 	const [poi_id, set_poi_id] = useState(1);
+	const [cycle, setCycle] = useState(1);
 
 	useEffect(() => {
-		props.getDailyEvents(poi_id);
+		props.getDailyEvents(poi_id, cycle);
 		buttons = [];
 	}, [poi_id]);
 	let x = [];
@@ -37,30 +38,52 @@ function Charts(props) {
 			{
 				label: `${name} Events`,
 				data: y,
-				backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)', 'rgba(255, 99, 132, 0.6)']
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.6)',
+					'rgba(54, 162, 235, 0.6)',
+					'rgba(255, 206, 86, 0.6)',
+					'rgba(75, 192, 192, 0.6)',
+					'rgba(153, 102, 255, 0.6)',
+					'rgba(255, 159, 64, 0.6)',
+					'rgba(255, 99, 132, 0.6)'
+				]
 			}
 		]
 	};
 
 	return (
-		<div
-			onClick={() => {
-				if (poi_id === 4) {
-					set_poi_id(1);
-				} else {
-					set_poi_id(poi_id + 1);
-				}
-			}}>
+		<div>
+			<h3>Daily Events Bar Chart Sorted by Custom Dates</h3>
 			<div>
-				<div>
-					<Bar data={data} width={100} height={200} options={{ maintainAspectRatio: false }} />
-				</div>
-				{/* <div>
-					<Pie data={data}></Pie>
-				</div> */}
+				<Bar data={data} width={100} height={200} options={{ maintainAspectRatio: false }} />
 			</div>
+			<div>
+				<Button
+					onClick={() => {
+						props.getDailyEvents(poi_id, cycle);
+						setCycle(cycle - 1);
+					}}>
+					Prev Week
+				</Button>
+				<Button
+					onClick={() => {
+						props.getDailyEvents(poi_id, cycle);
+						setCycle(cycle + 1);
+					}}>
+					Next Week
+				</Button>
 
-			{/* <div className="buttonPosition">{buttons}</div> */}
+				<Button
+					onClick={() => {
+						if (poi_id === 4) {
+							set_poi_id(1);
+						} else {
+							set_poi_id(poi_id + 1);
+						}
+					}}>
+					Switch Company
+				</Button>
+			</div>
 		</div>
 	);
 }

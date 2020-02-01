@@ -1,6 +1,17 @@
 import { combineReducers } from 'redux';
 
-import { getHourlyEventsReducer, getDailyEventsReducer, getAvgHourlyStatsReducer, getSumHourlyStatsReducer, getDailyStatsReducer, getPoiReducer, getHourlyStats, getHourlyEvents } from './marketingDataReducer';
+import {
+	getHourlyEventsReducer,
+	getDailyEventsReducer,
+	getAvgHourlyStatsReducer,
+	getSumHourlyStatsReducer,
+	getDailyStatsReducer,
+	getPoiReducer,
+	getHourlyStats,
+	getHourlyEvents,
+	getEventsSumGeo,
+	getStatsSumGeo
+} from './marketingDataReducer';
 
 export default combineReducers({
 	avgHourlyStats: getAvgHourlyStatsReducer,
@@ -10,6 +21,8 @@ export default combineReducers({
 	dailyStats: getDailyStatsReducer,
 	hourlyStats: getHourlyStats,
 	hourlyEvents: getHourlyEvents,
+	eventsSumGeo: getEventsSumGeo,
+	statsSumGeo: getStatsSumGeo,
 
 	poi: getPoiReducer
 });

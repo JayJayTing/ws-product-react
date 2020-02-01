@@ -6,7 +6,6 @@ import { Button, Input } from 'antd';
 import colorArray from './colorArray';
 import _ from 'lodash';
 import './HourlyStats.css';
-import create from 'antd/lib/icon/IconFont';
 
 function HourlyStats(props) {
 	const [minDate, setMinDate] = useState('2012-12-12');
@@ -71,66 +70,71 @@ function HourlyStats(props) {
 
 	return (
 		<div>
-			<Line data={data}></Line>
-			<div className='input-layout'>
-				<Input
-					value={minDate}
-					onChange={e => {
-						setMinDate(e.target.value);
-					}}></Input>
-				<Input
-					value={maxDate}
-					onChange={e => {
-						setMaxDate(e.target.value);
-					}}></Input>
-			</div>
-			<div className='button-layout'>
-				<Button
-					type='primary'
-					onClick={() => {
-						retrieveData(minDate, maxDate);
-						setQuery('average');
-					}}>
-					Get Average Stats For Specified Date
-				</Button>
-				<Button
-					type='primary'
-					onClick={() => {
-						retrieveData(minDate, maxDate);
-						setQuery('sum');
-					}}>
-					Get Sum of Stats For Specified Date
-				</Button>
-			</div>
-			<br />
-			<div className='button-layout'>
-				<Button
-					type='primary'
-					onClick={() => {
-						let newDataset = createDataset('clicks', query);
+			<h3>Hourly Stats Line Chart</h3>
+			<h5>Collection of averaged stats labeled by hour and custom dates</h5>
 
-						setDataSets(newDataset);
-					}}>
-					Order Dataset by Clicks
-				</Button>
-				<Button
-					type='primary'
-					onClick={() => {
-						let newDataset = createDataset('rev', query);
+			<div>
+				<Line data={data}></Line>
+				<div className='input-layout'>
+					<Input
+						value={minDate}
+						onChange={e => {
+							setMinDate(e.target.value);
+						}}></Input>
+					<Input
+						value={maxDate}
+						onChange={e => {
+							setMaxDate(e.target.value);
+						}}></Input>
+				</div>
+				<div className='button-layout'>
+					<Button
+						type='primary'
+						onClick={() => {
+							retrieveData(minDate, maxDate);
+							setQuery('average');
+						}}>
+						Get Average Stats For Specified Date
+					</Button>
+					<Button
+						type='primary'
+						onClick={() => {
+							retrieveData(minDate, maxDate);
+							setQuery('sum');
+						}}>
+						Get Sum of Stats For Specified Date
+					</Button>
+				</div>
+				<br />
+				<div className='button-layout'>
+					<Button
+						type='primary'
+						onClick={() => {
+							let newDataset = createDataset('clicks', query);
 
-						setDataSets(newDataset);
-					}}>
-					Order Dataset by Revenue
-				</Button>
-				<Button
-					type='primary'
-					onClick={() => {
-						let newDataset = createDataset('imps', query);
+							setDataSets(newDataset);
+						}}>
+						Order Dataset by Clicks
+					</Button>
+					<Button
+						type='primary'
+						onClick={() => {
+							let newDataset = createDataset('rev', query);
 
-						setDataSets(newDataset);
-					}}>
-					Order Dataset by Impressions
-				</Button>
+							setDataSets(newDataset);
+						}}>
+						Order Dataset by Revenue
+					</Button>
+					<Button
+						type='primary'
+						onClick={() => {
+							let newDataset = createDataset('imps', query);
+
+							setDataSets(newDataset);
+						}}>
+						Order Dataset by Impressions
+					</Button>
+				</div>
 			</div>
 		</div>
 	);

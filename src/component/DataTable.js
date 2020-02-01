@@ -3,6 +3,7 @@ import { getHourlyEvents, getHourlyStats } from '../actions';
 import { connect } from 'react-redux';
 import { Table, Button, Input, Switch } from 'antd';
 import Fuse from 'fuse.js';
+import './DataTable.css';
 
 const fuzzySearch = (object, rules, fuzzySeqence) => {
 	let fuse = new Fuse(object, rules);
@@ -13,8 +14,8 @@ const fuzzySearch = (object, rules, fuzzySeqence) => {
 
 function DataTable(props) {
 	useEffect(() => {
-		props.getHourlyEvents();
-		props.getHourlyStats();
+		props.getHourlyEvents(0);
+		props.getHourlyStats(0);
 	}, []);
 	const [arrangement, setArrangement] = useState(true);
 
@@ -98,25 +99,40 @@ function DataTable(props) {
 
 	return (
 		<div>
-			<div>
-				Search for Company
+			<div>{arrangement ? <h2>Events Table</h2> : <h2>Stats Table</h2>}</div>
+			<div className='switch'>
+				{arrangement ? <h4>Toggle Stats Table </h4> : <h4> Toggle Events Table</h4>}-
+				<Switch
+					type='primary'
+					onChange={() => {
+						setArrangement(!arrangement);
+					}}></Switch>
+			</div>
+			<div className='table-query-settings'>
+				Search by Location
 				<Input
 					value={query}
 					onChange={e => {
 						setQuery(e.target.value);
 					}}
 				/>
-				<Switch
-					type='primary'
-					onChange={() => {
-						setArrangement(!arrangement);
-					}}>
-					{arrangement ? 'Show Events Table' : 'Show Stats Table'}
-				</Switch>
 			</div>
-			<div>{arrangement ? 'Events Table' : 'Stats Table'}</div>
+			<br></br>
 			<div>
-				<Table columns={arrangement ? eventColumns : statsColumns} dataSource={arrangement ? fuzzySearch(Object.values(props.hourlyEvents), options, query) : fuzzySearch(Object.values(props.hourlyStats), options, query)} pagination={{ pageSize: 50 }} scroll={{ y: 500 }} />
+				<Table
+					columns={arrangement ? eventColumns : statsColumns}
+					dataSource={
+						arrangement
+							? query == ''
+								? Object.values(props.hourlyEvents)
+								: fuzzySearch(Object.values(props.hourlyEvents), options, query)
+							: query == ''
+							? Object.values(props.hourlyStats)
+							: fuzzySearch(Object.values(props.hourlyStats), options, query)
+					}
+					pagination={{ pageSize: 50 }}
+					scroll={{ y: 500 }}
+				/>
 			</div>
 			>
 		</div>

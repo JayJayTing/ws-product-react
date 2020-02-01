@@ -1,4 +1,4 @@
-import { GET_HOURLY_EVENTS, GET_HOURLY_STATS, GET_DAILY_EVENTS, GET_AVG_HOURLY_STATS, GET_SUM_HOURLY_STATS, GET_DAILY_STATS, GET_POI } from '../actions/types';
+import { GET_EVENTS_SUM_GEO, GET_STATS_SUM_GEO, GET_HOURLY_EVENTS, GET_HOURLY_STATS, GET_DAILY_EVENTS, GET_AVG_HOURLY_STATS, GET_SUM_HOURLY_STATS, GET_DAILY_STATS, GET_POI } from '../actions/types';
 
 export const getHourlyEventsReducer = (state = {}, action) => {
 	switch (action.type) {
@@ -76,6 +76,24 @@ export const getHourlyStats = (state = {}, action) => {
 export const getHourlyEvents = (state = {}, action) => {
 	switch (action.type) {
 		case GET_HOURLY_EVENTS:
+			return Object.assign({}, action.payload);
+		default:
+			return Object.assign({}, state);
+	}
+};
+
+export const getEventsSumGeo = (state = {}, action) => {
+	switch (action.type) {
+		case GET_EVENTS_SUM_GEO:
+			return Object.assign({}, action.payload);
+		default:
+			return Object.assign({}, state);
+	}
+};
+
+export const getStatsSumGeo = (state = {}, action) => {
+	switch (action.type) {
+		case GET_STATS_SUM_GEO:
 			return Object.assign({}, action.payload);
 		default:
 			return Object.assign({}, state);
