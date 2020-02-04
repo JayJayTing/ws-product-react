@@ -81,7 +81,7 @@ function Charts(props) {
 							set_poi_id(poi_id + 1);
 						}
 					}}>
-					Switch Company
+					Switch Locations
 				</Button>
 			</div>
 		</div>
