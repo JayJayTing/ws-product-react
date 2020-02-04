@@ -31,7 +31,7 @@ function App(props) {
 				onClick={() => {
 					setEventsChart(!eventsChart);
 				}}>
-				{eventsChart ? 'Hide Events Chart' : 'Show Events Chart'}
+				{eventsChart ? 'Hide Events Chart (2a-A)' : 'Show Events Chart (2a-A)'}
 			</Button>
 
 			{eventsChart && <DailyEventsChart />}
@@ -42,7 +42,7 @@ function App(props) {
 				onClick={() => {
 					setStatsChart(!statsChart);
 				}}>
-				{statsChart ? 'Hide Stats Chart' : 'Show Stats Chart'}
+				{statsChart ? 'Hide Stats Chart (2a-A)' : 'Show Stats Chart (2a-A)'}
 			</Button>
 			{statsChart && <DailyStatsChart />}
 			<br></br>
@@ -52,7 +52,7 @@ function App(props) {
 				onClick={() => {
 					setHourlyStats(!hourlyStats);
 				}}>
-				{hourlyStats ? 'Hide Hourly Stats Chart' : 'Show Hourly Stats Chart'}
+				{hourlyStats ? 'Hide Hourly Stats Chart (2a-A)' : 'Show Hourly Stats Chart (2a-A)'}
 			</Button>
 			{hourlyStats && <HourlyStats />}
 			<br></br>
@@ -62,7 +62,7 @@ function App(props) {
 				onClick={() => {
 					setDataTable(!dataTable);
 				}}>
-				{dataTable ? 'Hide DataTable' : 'Show DataTable'}
+				{dataTable ? 'Hide DataTable (2a-B)' : 'Show DataTable (2a-B)'}
 			</Button>
 			{dataTable && <DataTable />}
 
@@ -73,7 +73,7 @@ function App(props) {
 				onClick={() => {
 					setCompleteMap(!completeMap);
 				}}>
-				{completeMap ? 'Hide Map' : 'Show Map'}
+				{completeMap ? 'Hide Map (2a-C)' : 'Show Map (2a-C)'}
 			</Button>
 			{completeMap && <CompleteMap />}
 		</div>
