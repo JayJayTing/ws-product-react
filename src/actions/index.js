@@ -12,12 +12,15 @@ import {
 } from '../actions/types';
 
 export const getDailyEvents = (id, offset) => async dispatch => {
-	let response = await axios.post('http://localhost:5555/events/daily', { id, offset });
+	let response = await axios.post('https://ws-product-node.herokuapp.com/events/daily', {
+		id,
+		offset
+	});
 	dispatch({ type: GET_DAILY_EVENTS, payload: response.data });
 };
 
 export const getAvgHourlyStats = (id, minDate, maxDate) => async dispatch => {
-	let response = await axios.post('http://localhost:5555/stats/hourly/avg', {
+	let response = await axios.post('https://ws-product-node.herokuapp.com/stats/hourly/avg', {
 		id,
 		minDate,
 		maxDate
@@ -30,7 +33,7 @@ export const getAvgHourlyStats = (id, minDate, maxDate) => async dispatch => {
 	});
 };
 export const getSumHourlyStats = (id, minDate, maxDate) => async dispatch => {
-	let response = await axios.post('http://localhost:5555/stats/hourly/sum', {
+	let response = await axios.post('https://ws-product-node.herokuapp.com/stats/hourly/sum', {
 		id,
 		minDate,
 		maxDate
@@ -42,29 +45,36 @@ export const getSumHourlyStats = (id, minDate, maxDate) => async dispatch => {
 	});
 };
 export const getDailyStats = (id, offset) => async dispatch => {
-	let response = await axios.post('http://localhost:5555/stats/daily', { id, offset });
+	let response = await axios.post('https://ws-product-node.herokuapp.com/stats/daily', {
+		id,
+		offset
+	});
 	dispatch({ type: GET_DAILY_STATS, payload: response.data });
 };
 
 export const getPoi = id => async dispatch => {
-	let response = await axios.get('http://localhost:5555/poi');
+	let response = await axios.get('https://ws-product-node.herokuapp.com/poi');
 	dispatch({ type: GET_POI, payload: response.data });
 };
 export const getHourlyStats = skip => async dispatch => {
-	let response = await axios.post('http://localhost:5555/stats/hourly', { skip });
+	let response = await axios.post('https://ws-product-node.herokuapp.com/stats/hourly', { skip });
 	dispatch({ type: GET_HOURLY_STATS, payload: response.data });
 };
 
 export const getHourlyEvents = skip => async dispatch => {
-	let response = await axios.post('http://localhost:5555/events/hourly', { skip });
+	let response = await axios.post('https://ws-product-node.herokuapp.com/events/hourly', { skip });
 	dispatch({ type: GET_HOURLY_EVENTS, payload: response.data });
 };
 
 export const getStatsSumGeo = skip => async dispatch => {
-	let response = await axios.get('http://localhost:5555/stats/hourly/geosum', { skip });
+	let response = await axios.get('https://ws-product-node.herokuapp.com/stats/hourly/geosum', {
+		skip
+	});
 	dispatch({ type: GET_STATS_SUM_GEO, payload: response.data });
 };
 export const getEventsSumGeo = skip => async dispatch => {
-	let response = await axios.get('http://localhost:5555/events/hourly/geosum', { skip });
+	let response = await axios.get('https://ws-product-node.herokuapp.com/events/hourly/geosum', {
+		skip
+	});
 	dispatch({ type: GET_EVENTS_SUM_GEO, payload: response.data });
 };
